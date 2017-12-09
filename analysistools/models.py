@@ -3,7 +3,7 @@ from features.models import Feature
 class Analysis(Feature):
     """
     Abstract Feature model representing the inputs and outputs
-    of an analysis or modeling run 
+    of an analysis or modeling run
     """
 
     @property
@@ -45,14 +45,14 @@ class Analysis(Feature):
 
     @classmethod
     def input_fields(klass):
-        return [f 
-                for f in klass._meta.fields 
+        return [f
+                for f in klass._meta.fields
                 if f.attname.startswith('input_')]
 
     @classmethod
     def input_manytomany_fields(klass):
-        return [f 
-                for f in klass._meta.many_to_many 
+        return [f
+                for f in klass._meta.many_to_many
                 if f.attname.startswith('input_')]
 
     @property
@@ -67,8 +67,8 @@ class Analysis(Feature):
 
     @classmethod
     def output_fields(klass):
-        return [f 
-                for f in klass._meta.fields 
+        return [f
+                for f in klass._meta.fields
                 if f.attname.startswith('output_')]
 
     @property
@@ -93,7 +93,7 @@ class Analysis(Feature):
     def progress(self):
         """
         How many sub-tasks completed out of a total
-        e.g. (3,6) means 3 out of 6 pieces are complete so progress bar can 
+        e.g. (3,6) means 3 out of 6 pieces are complete so progress bar can
         show 50%
         """
         return (1, 1)
@@ -112,9 +112,9 @@ class Analysis(Feature):
 
     def run(self):
         """
-        Method to execute the model. 
-        Passes all input parameters to the analysis backend, 
-        takes the results and stores in the model output fields. 
+        Method to execute the model.
+        Passes all input parameters to the analysis backend,
+        takes the results and stores in the model output fields.
         """
         pass
 
@@ -126,18 +126,18 @@ class Analysis(Feature):
             self.__dict__[f.attname] = None
 
     '''
-    Note on keyword args rerun and form: these are extracted from kwargs so 
-    that they will not cause an unexpected keyword argument error during call 
+    Note on keyword args rerun and form: these are extracted from kwargs so
+    that they will not cause an unexpected keyword argument error during call
     to super.save
-    Note on rerun: 
-        When set to false no output fields will be cleared and the run method 
+    Note on rerun:
+        When set to false no output fields will be cleared and the run method
         will not be called
-    Note on form:  
+    Note on form:
         This is passed from feature.views update and create methods. In the
-        case of m2m fields this needs to be called after super.save.  
-    Since it also needs to be called before self.run, it will be passed from 
+        case of m2m fields this needs to be called after super.save.
+    Since it also needs to be called before self.run, it will be passed from
     here (in kwargs) to the superclass (Feature) save method.
-    
+
     (rather than its previous location in feature views update and create
     (after save has completed))
     '''
@@ -146,7 +146,11 @@ class Analysis(Feature):
             self.clear_output_fields() # get rid of old outputs
             super(Analysis, self).save(*args, **kwargs) # have to save first so it has a pk
             self.run()
-            super(Analysis, self).save(*args, **kwargs) 
+            ### RDH 12/08/2017
+            # The following line crashes with the error 'IntegrityError: duplicate key value violates unique constraints "module_modle_pkey"'
+            # It is possible by removing args and kwargs we lose some context added after 'run', but at least it doesn't error for now.
+            # super(Analysis, self).save(*args, **kwargs) # have to save first so it has a pk
+            super(Analysis, self).save()
         else:
             super(Analysis, self).save(*args, **kwargs) # have to save first so it has a pk
 

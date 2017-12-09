@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.safestring import mark_safe
-from django.forms.util import flatatt
+from django.forms.utils import flatatt
 from django.conf import settings
 from django.contrib.gis.geos import fromstr
 
@@ -50,7 +50,7 @@ class SliderWidget(forms.TextInput):
             // Create the sliderbar
             slidy.slider({
                 range: 'min',
-                min : %(min)s, 
+                min : %(min)s,
                 max : %(max)s,
                 %(step)s
                 change : function(event, ui) {
@@ -64,18 +64,18 @@ class SliderWidget(forms.TextInput):
             });
 
             // Initialize the slider bar to the current value
-            slidy.slider("value", field.val() ); 
+            slidy.slider("value", field.val() );
 
             // If the field changes, change the slider bar
             field.change( function (){
                 slidy.slider("value", field.val())
-            }); 
+            });
         });
         </script>
-        """ % {'slider_id': slider_id, 
-                'field_id': "id_%s" % name, 
-                'min': self.min, 
-                'max': self.max, 
+        """ % {'slider_id': slider_id,
+                'field_id': "id_%s" % name,
+                'min': self.min,
+                'max': self.max,
                 'hide_js': hide_js,
                 'step': self.get_step()}
 
@@ -101,8 +101,8 @@ class SimplePoint(forms.TextInput):
             <a id="do_grabpoint" class="button" href="#">
                 <span>Click to %s Starting Point</span>
             </a>
-            <span style="display:none"> 
-            %s 
+            <span style="display:none">
+            %s
             </span>
         </div>
         <br/><br/>
@@ -135,9 +135,9 @@ class SimplePoint(forms.TextInput):
                     var popts = {
                         visibility: true,
                         name: '%s %s',
-                        style: { icon: { color: '#FF0' } }            
+                        style: { icon: { color: '#FF0' } }
                     }
-                    popts['point'] = [0,0]; 
+                    popts['point'] = [0,0];
                     shape = gex.dom.addPlacemark(popts);
                     gex.edit.place(shape, {
                         bounce: false,
@@ -145,7 +145,7 @@ class SimplePoint(forms.TextInput):
                             $('#id_%s').val(shape_to_wkt(shape));
                             button.html('<span>Drag Placemark to Reset</span>');
                             gex.edit.makeDraggable(shape, {
-                                bounce: false, 
+                                bounce: false,
                                 dropCallback: function () {
                                     $('#id_%s').val(shape_to_wkt(shape));
                                 }
@@ -201,7 +201,7 @@ class DualSliderWidget(forms.TextInput):
             // Create the sliderbar
             slidy.slider({
                 range: true,
-                min : %(min)s, 
+                min : %(min)s,
                 max : %(max)s,
                 values: [%(min)s, %(max)s],
                 %(step)s
@@ -223,17 +223,17 @@ class DualSliderWidget(forms.TextInput):
             // If the field changes, change the slider bar
             low_field.change( function (){
                 slidy.slider("values", [low_field.val(),high_field.val()])
-            }); 
+            });
             high_field.change( function (){
                 slidy.slider("values", [low_field.val(),high_field.val()])
-            }); 
+            });
         });
         </script>
-        """ % {'slider_id': slider_id, 
-                'low_field_id': "id_%s" % self.min_field, 
-                'high_field_id': "id_%s" % self.max_field, 
-                'min': self.min, 
-                'max': self.max, 
+        """ % {'slider_id': slider_id,
+                'low_field_id': "id_%s" % self.min_field,
+                'high_field_id': "id_%s" % self.max_field,
+                'min': self.min,
+                'max': self.max,
                 'step': self.get_step()}
 
         return mark_safe(image_html + field + slider)
