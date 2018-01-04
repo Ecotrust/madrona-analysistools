@@ -178,7 +178,9 @@ class DualSliderWidget(forms.TextInput):
 
     def render(self, name, value, attrs=None):
         attrs['class'] = 'slidervalue'
-        final_attrs = self.build_attrs(attrs, name=name)
+        #RDH: Making compliant for Django 1.11+
+        attrs['name'] = name
+        final_attrs = self.build_attrs(attrs)
         slider_id = 'slider-' + name
 
         #field = super(DualSliderWidget, self).render(name, value, attrs)
