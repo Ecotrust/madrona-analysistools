@@ -1,7 +1,9 @@
-from django.conf.urls import include, url
+# from django.conf.urls.defaults import *
+from django.urls import re_path, include
 from . import views
 
 urlpatterns = [
-    url(r'^(?P<uid>[\w_]+)/progress.json$', 'progress', name='analysis-progress'),
-    url(r'^(?P<uid>[\w_]+)/progress.html$', 'progress_html', name='analysis-html-progress'),
+    #'madrona.analysistools.views',
+    re_path(r'^(?P<uid>[\w_]+)/progress.json$', views.progress, name='analysis-progress'),
+    re_path(r'^(?P<uid>[\w_]+)/progress.html$', views.progress_html, name='analysis-html-progress'),
 ]
