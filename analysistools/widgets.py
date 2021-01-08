@@ -25,7 +25,7 @@ class SliderWidget(forms.TextInput):
         else:
             return ''
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         attrs['class'] = 'slidervalue'
         #RDH: Making compliant for Django 1.11+
         attrs['name'] = name
@@ -92,8 +92,8 @@ class SimplePoint(forms.TextInput):
         super(SimplePoint, self).__init__(attrs)
         self.title = title
 
-    def render(self, name, value, attrs=None):
-        output = super(SimplePoint, self).render(name, value, attrs)
+    def render(self, name, value, attrs=None, renderer=None):
+        output = super(SimplePoint, self).render(name, value, attrs, renderer)
         set_text = "Set"
         new_text = "New"
         if value:
@@ -180,7 +180,7 @@ class DualSliderWidget(forms.TextInput):
         else:
             return ''
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         attrs['class'] = 'slidervalue'
         #RDH: Making compliant for Django 1.11+
         attrs['name'] = name
